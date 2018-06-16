@@ -1,5 +1,6 @@
 import UIKit
 import MapKit
+import Promises
 
 class ViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
@@ -7,37 +8,29 @@ class ViewController: UIViewController {
     let dataService = DataService()
     var places: [Place] = []
     let locationManager = CLLocationManager()
+    let region = 1000
+    var regionRadius: CLLocationDistance { return CLLocationDistance(region * 2) }
     var location = CLLocation() {
         didSet {
             centerOnMapLocation(location: location)
-            dataService.fetchDataFor(location: location, radius: region, keyword: "food") { places in
-                self.places = places
-                self.mapView.addAnnotations(places)
-            }
+            dataService.fetchDataFor(location: location, radius: region, keyword: "cafe")
+                .then { places in
+                    self.places = places
+                    self.mapView.addAnnotations(places)
+                }
         }
     }
-    let region = 1000
-    var regionRadius: CLLocationDistance { return CLLocationDistance(region) }
     
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    checkLocationAuthorizationStatus()
-    
-    setupView()
-}
-    
-    func centerOnMapLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius, regionRadius)
-        mapView.setRegion(coordinateRegion, animated: true)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let locationButton = MKUserTrackingBarButtonItem(mapView: mapView)
+        navigationItem.rightBarButtonItem = locationButton
+        checkLocationAuthorizationStatus()
     }
     
-    private func setupView() {
-        //mapView.register(ArtworkMarkerView.self,
-        //                 forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
-//        mapView.register(ArtworkView.self,
-//                         forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
-        mapView.delegate = self
+    private func centerOnMapLocation(location: CLLocation) {
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius, regionRadius)
+        mapView.setRegion(coordinateRegion, animated: true)
     }
     
     private func checkLocationAuthorizationStatus() {
@@ -66,29 +59,40 @@ extension ViewController: CLLocationManagerDelegate {
 }
 
 extension ViewController: MKMapViewDelegate {
-//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//        guard annotation is Artwork else { return nil }
-//
-//        let identifier = "marker"
-//
-//        var view = MKMarkerAnnotationView()
-//
-//        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView {
-//            dequeuedView.annotation = annotation
-//            view = dequeuedView
-//        } else {
-//            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-//            view.canShowCallout = true
-//            view.calloutOffset = CGPoint(x: -5, y: 5)
-//            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-//        }
-//        return view
-//    }
     
-//    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-//        let location = view.annotation as! Artwork
-//        let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-//        location.mapItem().openInMaps(launchOptions: launchOptions)
-//    }
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard let place = annotation as? Place else { return nil }
+        let identifier = "placeMarker"
+        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+            as? MKMarkerAnnotationView {
+            dequeuedView.annotation = annotation
+            return dequeuedView
+        }
+        return createAnnotationView(with: identifier, for: place)
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let location = view.annotation as! Place
+        let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking]
+        location.mapItem().openInMaps(launchOptions: launchOptions)
+    }
+    
+    private func createAnnotationView(with identifier: String, for place: Place) -> MKMarkerAnnotationView {
+        let view = MKMarkerAnnotationView(annotation: place, reuseIdentifier: identifier)
+        view.canShowCallout = true
+        view.calloutOffset = CGPoint(x: -5, y: 5)
+        
+        let mapsButton = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
+        mapsButton.setBackgroundImage(UIImage(named: "Maps-icon"), for: UIControlState())
+        view.rightCalloutAccessoryView = mapsButton
+        
+        let detailedLabel = UILabel()
+        detailedLabel.numberOfLines = 0
+        detailedLabel.font = detailedLabel.font.withSize(12)
+        let additionalDescription = place.rating != nil ? "\nRating: \(place.rating!)" : ""
+        detailedLabel.text = place.address + additionalDescription
+        view.detailCalloutAccessoryView = detailedLabel
+        return view
+    }
 }
 

@@ -5,11 +5,13 @@ class Place: NSObject, MKAnnotation {
     let name: String
     let address: String
     var coordinate: CLLocationCoordinate2D
+    let rating: Double?
     
-    init(name: String, address: String, coordinate: CLLocationCoordinate2D) {
+    init(name: String, address: String, coordinate: CLLocationCoordinate2D, rating: Double? = nil) {
         self.name = name
         self.address = address
         self.coordinate = coordinate
+        self.rating = rating
         
         super.init()
     }
