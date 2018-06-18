@@ -6,7 +6,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     let dataService = DataService()
-    var places: [Place] = []
+    var places: [Place] = [] {
+        didSet {
+            mapView.addAnnotations(places)
+        }
+    }
     let locationManager = CLLocationManager()
     let region = 1000
     var regionRadius: CLLocationDistance { return CLLocationDistance(region * 2) }
@@ -14,17 +18,12 @@ class ViewController: UIViewController {
         didSet {
             centerOnMapLocation(location: location)
             dataService.fetchDataFor(location: location, radius: region, keyword: "cafe")
-                .then { places in
-                    self.places = places
-                    self.mapView.addAnnotations(places)
-                }
+                .then { self.places = $0 }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let locationButton = MKUserTrackingBarButtonItem(mapView: mapView)
-        navigationItem.rightBarButtonItem = locationButton
         checkLocationAuthorizationStatus()
     }
     
@@ -45,7 +44,6 @@ class ViewController: UIViewController {
             locationManager.startUpdatingLocation()
         }
     }
-    
 }
 
 extension ViewController: CLLocationManagerDelegate {
