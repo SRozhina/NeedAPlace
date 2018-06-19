@@ -3,18 +3,33 @@ import CoreLocation
 import Promises
 
 class DataService {
-    func fetchDataFor(location: CLLocation, radius: Int, keyword: String) -> Promise<[Place]> {
-        let request = getURLRequestWith(location: location,
-                                        radius: radius,
-                                        keyword: keyword)
-        guard let finalRequest = request else { return Promise(NetworkError.badRequest) }
-        return URLSession.shared.dataTaskPromised(with: finalRequest)
-            .then { data in
+    private var currentTask: URLSessionTask? = nil
+    
+    func fetchData(for location: CLLocation, radius: Int, keyword: String) -> Promise<[Place]> {
+        currentTask?.cancel()
+        return Promise<[Place]> { fulfill, reject in
+            let request = self.getURLRequestWith(location: location,
+                                            radius: radius,
+                                            keyword: keyword)
+            guard let finalRequest = request else { return reject(NetworkError.badRequest) }
+            let task = URLSession.shared.dataTask(with: finalRequest) {data, response, error in
+                if let error = error {
+                    reject(error)
+                    return
+                }
+                guard let responseData = data else
+                {
+                    reject(NetworkError.badData)
+                    return
+                }
                 let decoder = JSONDecoder()
-                let resultsContainer = try! decoder.decode(ResultsContainer.self, from: data)
+                let resultsContainer = try! decoder.decode(ResultsContainer.self, from: responseData)
                 let places = self.placesFrom(results: resultsContainer.results)
-                return Promise(places)
+                return fulfill(places)
             }
+            task.resume()
+            self.currentTask = task
+        }
     }
     
     private func getURLRequestWith(location: CLLocation, radius: Int, keyword: String) -> URLRequest? {
@@ -23,10 +38,10 @@ class DataService {
         let key = "AIzaSyCQ_m_zrIkYs3iE8IssBsXM2dh5XQIP_3Y"
         let locationText = "\(location.coordinate.latitude),\(location.coordinate.longitude)"
         let parameters: [String : String] = ["key": key,
-                                             "location": locationText,
-                                             "radius": "\(radius)",
                                              "query": keyword,
-                                             "opennow": "true"
+                                             "opennow": "true",
+                                             "location": locationText,
+                                             "radius": "\(radius)"
                                             ]
         var items = [URLQueryItem]()
         for (name,value) in parameters {

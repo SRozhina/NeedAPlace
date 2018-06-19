@@ -3,31 +3,35 @@ import MapKit
 import Promises
 
 class ViewController: UIViewController {
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet private weak var mapView: MKMapView!
+    @IBOutlet private weak var searchBar: UISearchBar!
     
-    let dataService = DataService()
-    var places: [Place] = [] {
+    private let dataService = DataService()
+    private var places: [Place] = []
+    private let locationManager = CLLocationManager()
+    private let region = 1000
+    private var regionRadius: CLLocationDistance { return CLLocationDistance(region * 2) }
+    private var searchText: String { get { return searchBar.text ?? "" } }
+    private var currentLocation = CLLocation()
+    private var location = CLLocation() {
         didSet {
-            mapView.addAnnotations(places)
-        }
-    }
-    let locationManager = CLLocationManager()
-    let region = 1000
-    var regionRadius: CLLocationDistance { return CLLocationDistance(region * 2) }
-    var location = CLLocation() {
-        didSet {
-            centerOnMapLocation(location: location)
-            dataService.fetchDataFor(location: location, radius: region, keyword: "cafe")
-                .then { self.places = $0 }
+            centerOnMapLocation(location: location, regionRadius: regionRadius)
+            dataService.fetchData(for: location, radius: region/2, keyword: searchText)
+                .then { places in
+                    self.mapView.removeAnnotations(self.places)
+                    self.places = places
+                    self.mapView.addAnnotations(places)
+                }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBar.setImage(UIImage(named: "SelfLocation"), for: .bookmark, state: .normal)
         checkLocationAuthorizationStatus()
     }
     
-    private func centerOnMapLocation(location: CLLocation) {
+    private func centerOnMapLocation(location: CLLocation, regionRadius: CLLocationDistance) {
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius, regionRadius)
         mapView.setRegion(coordinateRegion, animated: true)
     }
@@ -44,6 +48,9 @@ class ViewController: UIViewController {
             locationManager.startUpdatingLocation()
         }
     }
+    @IBAction func showLocationTapped(_ sender: Any) {
+        centerOnMapLocation(location: location, regionRadius: 500)
+    }
 }
 
 extension ViewController: CLLocationManagerDelegate {
@@ -53,6 +60,7 @@ extension ViewController: CLLocationManagerDelegate {
         if location.distance(from: currentLocation) > 100 {
             location = currentLocation
         }
+        self.currentLocation = currentLocation
     }
 }
 
@@ -93,4 +101,12 @@ extension ViewController: MKMapViewDelegate {
         return view
     }
 }
+
+extension ViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        location = currentLocation
+    }
+}
+
 
