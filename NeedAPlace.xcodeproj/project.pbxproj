@@ -13,14 +13,14 @@
 		40086AF91EC7F7AF00FD79F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40086AF71EC7F7AF00FD79F6 /* Main.storyboard */; };
 		40086AFB1EC7F7AF00FD79F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40086AFA1EC7F7AF00FD79F6 /* Assets.xcassets */; };
 		40086AFE1EC7F7AF00FD79F6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40086AFC1EC7F7AF00FD79F6 /* LaunchScreen.storyboard */; };
-		C309ED9520D270DC005D2B5E /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C309ED9420D270DC005D2B5E /* DataService.swift */; };
+		C309ED9520D270DC005D2B5E /* PlacesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C309ED9420D270DC005D2B5E /* PlacesStorage.swift */; };
 		C30D43FB20D5C59F00065141 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = C30D43FA20D5C59F00065141 /* Podfile */; };
-		C30D43FD20D5C97D00065141 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30D43FC20D5C97D00065141 /* NetworkError.swift */; };
-		C30D43FF20D5C9B700065141 /* URLSessionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30D43FE20D5C9B700065141 /* URLSessionExtension.swift */; };
-		C3E329EA20D2AACA00E904ED /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C338D0E820D2AA31003AD733 /* Geometry.swift */; };
-		C3E329EB20D2AACD00E904ED /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = C338D0EA20D2AA31003AD733 /* Location.swift */; };
-		C3E329EE20D2AAD500E904ED /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = C338D0E920D2AA31003AD733 /* Results.swift */; };
-		C3E329F320D2AFE300E904ED /* ResultsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E329F220D2AFE300E904ED /* ResultsContainer.swift */; };
+		C30D43FD20D5C97D00065141 /* PlacesStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30D43FC20D5C97D00065141 /* PlacesStorageError.swift */; };
+		C3AAD1DE20E7FFC90013E846 /* CancelableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AAD1DD20E7FFC90013E846 /* CancelableRequest.swift */; };
+		C3E329EA20D2AACA00E904ED /* ApiGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C338D0E820D2AA31003AD733 /* ApiGeometry.swift */; };
+		C3E329EB20D2AACD00E904ED /* ApiLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C338D0EA20D2AA31003AD733 /* ApiLocation.swift */; };
+		C3E329EE20D2AAD500E904ED /* ApiPlaceResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C338D0E920D2AA31003AD733 /* ApiPlaceResult.swift */; };
+		C3E329F320D2AFE300E904ED /* ApiPlacesResponce.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E329F220D2AFE300E904ED /* ApiPlacesResponce.swift */; };
 		C3E329F520D2B4A200E904ED /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E329F420D2B4A200E904ED /* Place.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,14 +34,14 @@
 		40086AFD1EC7F7AF00FD79F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		40086AFF1EC7F7AF00FD79F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4818CDE8D71D92A7E10CE77C /* Pods-NeedAPlace.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NeedAPlace.release.xcconfig"; path = "Pods/Target Support Files/Pods-NeedAPlace/Pods-NeedAPlace.release.xcconfig"; sourceTree = "<group>"; };
-		C309ED9420D270DC005D2B5E /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		C309ED9420D270DC005D2B5E /* PlacesStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesStorage.swift; sourceTree = "<group>"; };
 		C30D43FA20D5C59F00065141 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		C30D43FC20D5C97D00065141 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
-		C30D43FE20D5C9B700065141 /* URLSessionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionExtension.swift; sourceTree = "<group>"; };
-		C338D0E820D2AA31003AD733 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
-		C338D0E920D2AA31003AD733 /* Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
-		C338D0EA20D2AA31003AD733 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
-		C3E329F220D2AFE300E904ED /* ResultsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsContainer.swift; sourceTree = "<group>"; };
+		C30D43FC20D5C97D00065141 /* PlacesStorageError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesStorageError.swift; sourceTree = "<group>"; };
+		C338D0E820D2AA31003AD733 /* ApiGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiGeometry.swift; sourceTree = "<group>"; };
+		C338D0E920D2AA31003AD733 /* ApiPlaceResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiPlaceResult.swift; sourceTree = "<group>"; };
+		C338D0EA20D2AA31003AD733 /* ApiLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiLocation.swift; sourceTree = "<group>"; };
+		C3AAD1DD20E7FFC90013E846 /* CancelableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableRequest.swift; sourceTree = "<group>"; };
+		C3E329F220D2AFE300E904ED /* ApiPlacesResponce.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiPlacesResponce.swift; sourceTree = "<group>"; };
 		C3E329F420D2B4A200E904ED /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		D51E64B961EFC3DC6BC9E7D5 /* Pods-NeedAPlace.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NeedAPlace.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NeedAPlace/Pods-NeedAPlace.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -80,13 +80,11 @@
 		40086AF21EC7F7AF00FD79F6 /* NeedAPlace */ = {
 			isa = PBXGroup;
 			children = (
-				C309EDA820D29E2C005D2B5E /* API Classes */,
 				C30D43DC20D3F6C400065141 /* Model */,
-				C30D43DD20D3F6D700065141 /* Services */,
+				C30D43DD20D3F6D700065141 /* Storages */,
 				C30D43DE20D3F6EC00065141 /* Supporting files */,
 				40086AF51EC7F7AF00FD79F6 /* ViewController.swift */,
 				C30D43DF20D3F6F800065141 /* Storyboards */,
-				C30D43FE20D5C9B700065141 /* URLSessionExtension.swift */,
 			);
 			path = NeedAPlace;
 			sourceTree = "<group>";
@@ -99,32 +97,31 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C309EDA820D29E2C005D2B5E /* API Classes */ = {
+		C309EDA820D29E2C005D2B5E /* API Models */ = {
 			isa = PBXGroup;
 			children = (
-				C3E329F220D2AFE300E904ED /* ResultsContainer.swift */,
-				C338D0E820D2AA31003AD733 /* Geometry.swift */,
-				C338D0EA20D2AA31003AD733 /* Location.swift */,
-				C338D0E920D2AA31003AD733 /* Results.swift */,
+				C3E329F220D2AFE300E904ED /* ApiPlacesResponce.swift */,
+				C338D0E820D2AA31003AD733 /* ApiGeometry.swift */,
+				C338D0EA20D2AA31003AD733 /* ApiLocation.swift */,
+				C338D0E920D2AA31003AD733 /* ApiPlaceResult.swift */,
 			);
-			path = "API Classes";
+			path = "API Models";
 			sourceTree = "<group>";
 		};
 		C30D43DC20D3F6C400065141 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				C3E329F420D2B4A200E904ED /* Place.swift */,
-				C30D43FC20D5C97D00065141 /* NetworkError.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C30D43DD20D3F6D700065141 /* Services */ = {
+		C30D43DD20D3F6D700065141 /* Storages */ = {
 			isa = PBXGroup;
 			children = (
-				C309ED9420D270DC005D2B5E /* DataService.swift */,
+				C3D30BF120E7F48800B9BD30 /* PlacesStorage */,
 			);
-			path = Services;
+			path = Storages;
 			sourceTree = "<group>";
 		};
 		C30D43DE20D3F6EC00065141 /* Supporting files */ = {
@@ -144,6 +141,17 @@
 				40086AFC1EC7F7AF00FD79F6 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		C3D30BF120E7F48800B9BD30 /* PlacesStorage */ = {
+			isa = PBXGroup;
+			children = (
+				C309EDA820D29E2C005D2B5E /* API Models */,
+				C309ED9420D270DC005D2B5E /* PlacesStorage.swift */,
+				C30D43FC20D5C97D00065141 /* PlacesStorageError.swift */,
+				C3AAD1DD20E7FFC90013E846 /* CancelableRequest.swift */,
+			);
+			path = PlacesStorage;
 			sourceTree = "<group>";
 		};
 		DA49F8B35D619EFBD1A6D941 /* Pods */ = {
@@ -273,15 +281,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C30D43FF20D5C9B700065141 /* URLSessionExtension.swift in Sources */,
 				40086AF61EC7F7AF00FD79F6 /* ViewController.swift in Sources */,
-				C3E329F320D2AFE300E904ED /* ResultsContainer.swift in Sources */,
-				C3E329EE20D2AAD500E904ED /* Results.swift in Sources */,
-				C3E329EB20D2AACD00E904ED /* Location.swift in Sources */,
+				C3E329F320D2AFE300E904ED /* ApiPlacesResponce.swift in Sources */,
+				C3E329EE20D2AAD500E904ED /* ApiPlaceResult.swift in Sources */,
+				C3AAD1DE20E7FFC90013E846 /* CancelableRequest.swift in Sources */,
+				C3E329EB20D2AACD00E904ED /* ApiLocation.swift in Sources */,
 				40086AF41EC7F7AF00FD79F6 /* AppDelegate.swift in Sources */,
-				C3E329EA20D2AACA00E904ED /* Geometry.swift in Sources */,
-				C30D43FD20D5C97D00065141 /* NetworkError.swift in Sources */,
-				C309ED9520D270DC005D2B5E /* DataService.swift in Sources */,
+				C3E329EA20D2AACA00E904ED /* ApiGeometry.swift in Sources */,
+				C30D43FD20D5C97D00065141 /* PlacesStorageError.swift in Sources */,
+				C309ED9520D270DC005D2B5E /* PlacesStorage.swift in Sources */,
 				C3E329F520D2B4A200E904ED /* Place.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
