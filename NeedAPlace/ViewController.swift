@@ -6,61 +6,66 @@ class ViewController: UIViewController {
     @IBOutlet private weak var mapView: MKMapView!
     @IBOutlet private weak var searchBar: UISearchBar!
     
-    private let dataService = DataService()
+    private let placesStorage = PlacesStorage()
     private var places: [Place] = []
     private let locationManager = CLLocationManager()
     private let region = 1000
     private var regionRadius: CLLocationDistance { return CLLocationDistance(region * 2) }
     private var searchText: String { get { return searchBar.text ?? "" } }
-    private var currentLocation = CLLocation()
-    private var location = CLLocation() {
-        didSet {
-            centerOnMapLocation(location: location, regionRadius: regionRadius)
-            dataService.fetchData(for: location, radius: region/2, keyword: searchText)
-                .then { places in
-                    self.mapView.removeAnnotations(self.places)
-                    self.places = places
-                    self.mapView.addAnnotations(places)
-                }
-        }
-    }
+    private var location = CLLocation()
+    private let locationUpdateDistance: CLLocationDistance = 100
+    private var placesRequest: CancelableRequest<[Place]>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         searchBar.setImage(UIImage(named: "SelfLocation"), for: .bookmark, state: .normal)
-        checkLocationAuthorizationStatus()
+        
+        mapView.showsUserLocation = true
+        
+        configureLocationManager()
     }
     
-    private func centerOnMapLocation(location: CLLocation, regionRadius: CLLocationDistance) {
+    @IBAction private func showLocationTapped(_ sender: Any) {
+        centerOnMap(location: location, regionRadius: regionRadius)
+    }
+    
+    private func centerOnMap(location: CLLocation, regionRadius: CLLocationDistance) {
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius, regionRadius)
         mapView.setRegion(coordinateRegion, animated: true)
     }
     
-    private func checkLocationAuthorizationStatus() {
-        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-            mapView.showsUserLocation = true
-        } else {
+    private func configureLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
             locationManager.requestWhenInUseAuthorization()
         }
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-            locationManager.startUpdatingLocation()
-        }
     }
-    @IBAction func showLocationTapped(_ sender: Any) {
-        centerOnMapLocation(location: location, regionRadius: 500)
+    
+    private func updateLocation(location: CLLocation) {
+        centerOnMap(location: location, regionRadius: regionRadius)
+        
+        placesRequest?.cancel()
+        placesRequest = placesStorage.fetchPlaces(for: location.coordinate, radius: region/2, keyword: searchText)
+        placesRequest!.promise.then { places in
+            self.mapView.removeAnnotations(self.places)
+            self.places = places
+            self.mapView.addAnnotations(places)
+        }
+        
+        self.location = location
     }
 }
 
 extension ViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locationValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        let currentLocation = CLLocation(latitude: locationValue.latitude, longitude: locationValue.longitude)
-        if location.distance(from: currentLocation) > 100 {
-            location = currentLocation
+        guard let currentLocation = manager.location else { return }
+        if location.distance(from: currentLocation) > locationUpdateDistance {
+            updateLocation(location: currentLocation)
         }
-        self.currentLocation = currentLocation
     }
 }
 
@@ -68,12 +73,13 @@ extension ViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let place = annotation as? Place else { return nil }
+        
         let identifier = "placeMarker"
-        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-            as? MKMarkerAnnotationView {
+        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView {
             dequeuedView.annotation = annotation
             return dequeuedView
         }
+        
         return createAnnotationView(with: identifier, for: place)
     }
     
@@ -98,6 +104,7 @@ extension ViewController: MKMapViewDelegate {
         let additionalDescription = place.rating != nil ? "\nRating: \(place.rating!)" : ""
         detailedLabel.text = place.address + additionalDescription
         view.detailCalloutAccessoryView = detailedLabel
+        
         return view
     }
 }
@@ -105,7 +112,7 @@ extension ViewController: MKMapViewDelegate {
 extension ViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        location = currentLocation
+        updateLocation(location: locationManager.location!)
     }
 }
 
